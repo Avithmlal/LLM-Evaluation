@@ -112,7 +112,7 @@ function Results() {
                 </div>
             ) : (
                 <>
-                    {/* Evaluation Selector */}
+                    {/* Evaluation Selector - FIXED VISIBILITY */}
                     <div className="card mb-6">
                         <div className="card-header">
                             <div className="flex items-center justify-between">
@@ -131,24 +131,32 @@ function Results() {
                         </div>
                         <div className="card-content">
                             <div className="grid grid-3">
-                                {evaluations.map((evaluation) => (
-                                    <button
-                                        key={evaluation.id}
-                                        onClick={() => handleEvaluationSelect(evaluation)}
-                                        className={`p-4 border rounded-lg text-left transition-all ${selectedEvaluation?.id === evaluation.id
-                                            ? 'border-blue-500 bg-blue-50'
-                                            : 'border-gray-200 hover:border-gray-300'
-                                            }`}
-                                    >
-                                        <div className="font-medium">{evaluation.name}</div>
-                                        <div className="text-sm text-gray-500 mt-1">
-                                            {new Date(evaluation.created_at).toLocaleDateString()}
-                                        </div>
-                                        <div className="text-xs text-gray-400 mt-1">
-                                            ID: {evaluation.id}
-                                        </div>
-                                    </button>
-                                ))}
+                                {evaluations.map((evaluation) => {
+                                    const isSelected = selectedEvaluation?.id === evaluation.id;
+                                    return (
+                                        <button
+                                            key={evaluation.id}
+                                            onClick={() => handleEvaluationSelect(evaluation)}
+                                            className={`evaluation-selector-card ${isSelected ? 'selected' : ''}`}
+                                        >
+                                            <div className={`font-medium ${isSelected ? 'text-blue-900' : 'text-gray-900'}`}>
+                                                {evaluation.name}
+                                            </div>
+                                            <div className={`text-sm mt-1 ${isSelected ? 'text-blue-700' : 'text-gray-500'}`}>
+                                                {new Date(evaluation.created_at).toLocaleDateString()}
+                                            </div>
+                                            <div className={`text-xs mt-1 ${isSelected ? 'text-blue-600' : 'text-gray-400'}`}>
+                                                ID: {evaluation.id}
+                                            </div>
+                                            {isSelected && (
+                                                <div className="selected-indicator">
+                                                    <Eye size={16} className="text-blue-600" />
+                                                    <span className="text-xs font-medium text-blue-600 ml-1">Selected</span>
+                                                </div>
+                                            )}
+                                        </button>
+                                    );
+                                })}
                             </div>
                         </div>
                     </div>
