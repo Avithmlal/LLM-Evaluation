@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Play, TrendingUp, Database, BarChart3, Clock, CheckCircle, AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Play, TrendingUp, Database, BarChart3, Clock, CheckCircle, AlertCircle, FileText } from 'lucide-react';
 import { apiService } from '../services/api';
 
 function Dashboard() {
+    const navigate = useNavigate();
     const [stats, setStats] = useState({
         models: 0,
         testCases: 0,
@@ -59,6 +61,26 @@ function Dashboard() {
         }
     };
 
+    const navigateToEvaluation = (evaluationId) => {
+        navigate(`/results/${evaluationId}`);
+    };
+
+    const navigateToSection = (section) => {
+        switch (section) {
+            case 'models':
+                navigate('/models');
+                break;
+            case 'testCases':
+                navigate('/test-cases');
+                break;
+            case 'results':
+                navigate('/results');
+                break;
+            default:
+                break;
+        }
+    };
+
     const getStatusIcon = (status) => {
         switch (status) {
             case 'completed':
@@ -103,16 +125,24 @@ function Dashboard() {
                 </p>
             </div>
 
-            {/* Stats Grid */}
+            {/* Stats Grid - Now Clickable */}
             <div className="stats-grid">
-                <div className="stat-card">
+                <div
+                    className="stat-card clickable"
+                    onClick={() => navigateToSection('models')}
+                    title="Click to view models"
+                >
                     <Database className="stat-icon" size={24} />
                     <span className="stat-value">{stats.models}</span>
                     <span className="stat-label">Active Models</span>
                 </div>
 
-                <div className="stat-card">
-                    <BarChart3 className="stat-icon" size={24} />
+                <div
+                    className="stat-card clickable"
+                    onClick={() => navigateToSection('testCases')}
+                    title="Click to view test cases"
+                >
+                    <FileText className="stat-icon" size={24} />
                     <span className="stat-value">{stats.testCases}</span>
                     <span className="stat-label">Test Cases</span>
                 </div>
@@ -123,8 +153,12 @@ function Dashboard() {
                     <span className="stat-label">Categories</span>
                 </div>
 
-                <div className="stat-card">
-                    <CheckCircle className="stat-icon" size={24} />
+                <div
+                    className="stat-card clickable"
+                    onClick={() => navigateToSection('results')}
+                    title="Click to view evaluations"
+                >
+                    <BarChart3 className="stat-icon" size={24} />
                     <span className="stat-value">{stats.evaluations}</span>
                     <span className="stat-label">Total Evaluations</span>
                 </div>
@@ -170,7 +204,7 @@ function Dashboard() {
                     </div>
                 </div>
 
-                {/* Recent Evaluations */}
+                {/* Recent Evaluations - Now Clickable */}
                 <div className="card">
                     <div className="card-header">
                         <h2 className="card-title">
@@ -186,7 +220,12 @@ function Dashboard() {
                         ) : (
                             <div className="space-y-3">
                                 {recentEvaluations.map((evaluation) => (
-                                    <div key={evaluation.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                                    <div
+                                        key={evaluation.id}
+                                        className="recent-evaluation-item flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                                        onClick={() => navigateToEvaluation(evaluation.id)}
+                                        title="Click to view evaluation details"
+                                    >
                                         <div className="flex items-center gap-3">
                                             {getStatusIcon(evaluation.status)}
                                             <div>
@@ -211,25 +250,27 @@ function Dashboard() {
             <div className="card mt-6">
                 <div className="card-header">
                     <h2 className="card-title">
-                        <BarChart3 size={20} />
+                        <TrendingUp size={20} />
                         System Overview
                     </h2>
                 </div>
                 <div className="card-content">
-                    <div className="grid grid-3">
-                        <div className="text-center p-4 bg-blue-50 rounded-lg">
-                            <div className="text-2xl font-bold text-blue-600 mb-2">AutoGen</div>
-                            <div className="text-sm text-gray">Multi-Agent Evaluation</div>
+                    <div className="grid grid-4">
+                        <div className="text-center">
+                            <div className="text-2xl font-bold text-blue-600">OpenAI</div>
+                            <div className="text-sm text-gray">GPT Models</div>
                         </div>
-
-                        <div className="text-center p-4 bg-green-50 rounded-lg">
-                            <div className="text-2xl font-bold text-green-600 mb-2">Real-time</div>
-                            <div className="text-sm text-gray">Performance Monitoring</div>
+                        <div className="text-center">
+                            <div className="text-2xl font-bold text-purple-600">Anthropic</div>
+                            <div className="text-sm text-gray">Claude Models</div>
                         </div>
-
-                        <div className="text-center p-4 bg-purple-50 rounded-lg">
-                            <div className="text-2xl font-bold text-purple-600 mb-2">Multi-LLM</div>
-                            <div className="text-sm text-gray">Provider Support</div>
+                        <div className="text-center">
+                            <div className="text-2xl font-bold text-green-600">AutoGen</div>
+                            <div className="text-sm text-gray">Multi-Agent</div>
+                        </div>
+                        <div className="text-center">
+                            <div className="text-2xl font-bold text-orange-600">Real-time</div>
+                            <div className="text-sm text-gray">Evaluation</div>
                         </div>
                     </div>
                 </div>

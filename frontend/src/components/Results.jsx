@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart3, Clock, DollarSign, Target, Award, Eye, RefreshCw, TrendingUp } from 'lucide-react';
 import { apiService } from '../services/api';
+import { useParams } from 'react-router-dom';
 
 function Results() {
+    const { evaluationId } = useParams();
     const [evaluations, setEvaluations] = useState([]);
     const [selectedEvaluation, setSelectedEvaluation] = useState(null);
     const [results, setResults] = useState(null);
@@ -11,7 +13,11 @@ function Results() {
 
     useEffect(() => {
         loadEvaluations();
-    }, []);
+        // If evaluationId is provided, auto-select that evaluation
+        if (evaluationId) {
+            setSelectedEvaluation(parseInt(evaluationId));
+        }
+    }, [evaluationId]);
 
     const loadEvaluations = async () => {
         try {

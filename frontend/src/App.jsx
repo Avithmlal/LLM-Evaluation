@@ -1,9 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Activity, Database, BarChart3, Home } from 'lucide-react';
+import { Activity, Database, BarChart3, Home, FileText } from 'lucide-react';
 import Dashboard from './components/Dashboard';
 import Models from './components/Models';
 import Results from './components/Results';
+import TestCases from './components/TestCases';
 import './App.css';
 
 function Navigation() {
@@ -37,6 +38,14 @@ function Navigation() {
           </Link>
 
           <Link
+            to="/test-cases"
+            className={`nav-link ${isActive('/test-cases') ? 'active' : ''}`}
+          >
+            <FileText size={18} />
+            <span>Test Cases</span>
+          </Link>
+
+          <Link
             to="/results"
             className={`nav-link ${isActive('/results') ? 'active' : ''}`}
           >
@@ -58,7 +67,9 @@ function App() {
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/models" element={<Models />} />
+            <Route path="/test-cases" element={<TestCases />} />
             <Route path="/results" element={<Results />} />
+            <Route path="/results/:evaluationId" element={<Results />} />
           </Routes>
         </main>
       </div>
